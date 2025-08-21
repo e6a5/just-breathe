@@ -1,0 +1,34 @@
+{
+  "name": "just-breathe",
+  "version": "1.0.0",
+  "description": "A simple breathing companion that guides you through peaceful breathing exercises",
+  "main": "index.html",
+  "scripts": {
+    "serve": "cd src && python3 -m http.server 8080",
+    "dev": "cd src && python3 -m http.server 8080"
+  },
+  "keywords": [
+    "breathing",
+    "relaxation",
+    "wellness",
+    "peace",
+    "calm",
+    "simple",
+    "mindful"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/just-breathe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/just-breathe/issues"
+  },
+  "homepage": "https://github.com/yourusername/just-breathe#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
