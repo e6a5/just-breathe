@@ -1,75 +1,46 @@
 # Just Breathe
 
-A simple breathing companion that follows Unix philosophy: **"Do one thing, and do it well."**
+**Find your calm through simple breathing.**
 
-## What It Does
+A gentle companion that guides you through natural breathing with a flowing animation. No instructions, no complexity - just breathe.
 
-Guides you through natural breathing with a gentle, flowing animation. No instructions, no complexity - just breathe.
+## ✨ Simple & Focused
 
-## How to Use
+- **One purpose**: Pure breathing guidance
+- **Zero complexity**: No setup, no learning curve
+- **Universal**: Works on any device with a browser
+- **Graceful**: Always works, even when things go wrong
 
-### Simple (No Server)
-1. Open `src/index.html` in any modern browser
-2. Follow the breathing animation
-3. That's it!
+## 🚀 Get Started in Seconds
 
-### With Local Server
+1. **Open** `src/index.html` in any browser
+2. **Breathe** with the gentle animation
+3. **That's it!**
+
+## 🌐 Run Locally
+
 ```bash
-cd src
-python3 -m http.server 8080
+npm run serve
 # Open http://localhost:8080
 ```
 
-### Deploy Anywhere
+## 📁 Deploy Anywhere
+
 Upload the `src/` folder to any web server. No build step required.
 
-## Project Structure
+## 💡 Unix Philosophy
 
-```
-just-breathe/
-├── src/                    # Production files
-│   ├── index.html         # Main interface
-│   ├── breathing.js       # Breathing logic
-│   └── icons/            # App icons
-├── README.md              # This file
-└── AGENTS.md              # Project principles
-```
+- **"Do one thing, and do it well"** - Pure breathing exercise
+- **Simplicity** - No build tools, no compilation
+- **Fail gracefully** - Multiple fallback levels
+- **Respect user environment** - Standard web technologies
 
-## Features
-
-- **Simple**: Pure JavaScript, no complex dependencies
-- **Focused**: One purpose - breathing guidance
-- **Universal**: Works on any device with a browser
-- **Graceful**: Falls back to text if canvas fails
-
-## Unix Philosophy Compliance
-
-**"Do one thing, and do it well"** - Pure breathing exercise  
-**Simplicity** - No build tools, no compilation  
-**Fail gracefully** - Multiple fallback levels  
-**Respect user environment** - Standard web technologies  
-
-## Customization
-
-Edit `src/breathing.js` to change:
-- Breathing pattern timing
-- Colors and visual effects
-- Instructions and text
-
-
-
-## Browser Support
-
-Works on any modern browser that supports:
-- HTML5 Canvas
-- JavaScript ES6+
-
-## Error Handling
+## 🔧 For Developers
 
 The app gracefully degrades:
-1. **Canvas fails** → Text-based breathing
-2. **JavaScript fails** → Static breathing guide
-3. **Everything fails** → Simple text instructions
+- **Canvas fails** → Text-based breathing
+- **JavaScript fails** → Static breathing guide
+- **Everything fails** → Simple text instructions
 
 ---
 
