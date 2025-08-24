@@ -4,8 +4,8 @@
   "description": "A simple breathing companion that guides you through peaceful breathing exercises",
   "main": "index.html",
   "scripts": {
-    "serve": "cd src && npx http-server -p 8080",
-    "dev": "cd src && npx http-server -p 8080 --cors"
+    "serve": "npx http-server -p 8080",
+    "dev": "npx http-server -p 8080"
   },
   "keywords": [
     "breathing",
