@@ -1,34 +1,13 @@
 {
   "name": "just-breathe",
   "version": "1.0.0",
-  "description": "A simple breathing companion that guides you through peaceful breathing exercises",
-  "main": "index.html",
+  "description": "Simple breathing companion app",
   "scripts": {
-    "serve": "npx http-server -p 8080",
-    "dev": "npx http-server -p 8080"
+    "build": "node build.js",
+    "dev": "open index.html",
+    "deploy": "npm run build && echo 'Ready to deploy! Upload index.min.html to Netlify'"
   },
-  "keywords": [
-    "breathing",
-    "relaxation",
-    "wellness",
-    "peace",
-    "calm",
-    "simple",
-    "mindful"
-  ],
-  "author": "Your Name",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/just-breathe.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/just-breathe/issues"
-  },
-  "homepage": "https://github.com/yourusername/just-breathe#readme",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "devDependencies": {},
-  "dependencies": {}
+  "devDependencies": {
+    "terser": "^5.24.0"
+  }
 }

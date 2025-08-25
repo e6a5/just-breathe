@@ -1,39 +1,53 @@
 # Just Breathe
 
-Find your center through the simple rhythm of your own breath.
+A simple breathing companion app that guides you through peaceful breathing exercises.
 
-This is a gentle companion designed to guide you through a natural breathing sequence with a simple, flowing animation. There are no instructions to read and no complex settings to configure. Just open the page and breathe.
+## Project Principles
 
-## Core Principles
+Following Unix philosophy:
+- **"Do one thing, and do it well"** - Focus on breathing functionality only
+- **Simplicity** - Prefer simple, obvious solutions over complex ones
+- **Fail gracefully** - Clear error messages, degrade gracefully
+- **Respect user environment** - Standard web technologies
 
-- **Purity of Purpose**: To offer a space for guided breathing, and nothing more.
-- **Inherent Simplicity**: No setup, no learning curve, just immediate use.
-- **Universal Access**: Works on any device with a modern web browser.
-- **Designed for Serenity**: A tool that remains reliable and calm, even when things go wrong.
+## Development Workflow
 
-## Usage
+### Development (Readable Code)
+- Work with `index.html` - clean, maintainable, well-commented
+- Easy to debug, modify, and extend
+- Perfect for development and collaboration
 
-1. Open the `index.html` file in your browser.
-2. Follow the gentle rhythm of the animation.
-3. That is all.
+### Production (2KB Constraint)
+- Run `npm run build` to create `index.min.html`
+- Automatically minified to meet 2KB size requirement
+- Maintains exact same functionality
 
-## The Unix Philosophy in Practice
+## Quick Start
 
-- **"Do one thing, and do it well"**: This application is dedicated entirely to the practice of guided breathing.
-- **Simplicity**: It avoids build tools and compilation steps.
-- **Graceful Failure**: The application is designed to degrade gracefully, with multiple fallback levels.
-- **Respect for the User's Environment**: It is built with standard web technologies to ensure broad compatibility.
+```bash
+# Development
+npm run dev          # Open readable version in browser
 
-## For Developers
+# Production build
+npm run build        # Create minified 2KB version
+```
 
-The application degrades gracefully in the following order:
+## File Structure
 
-- If the canvas fails, it will fall back to a text-based breathing guide.
-- If JavaScript fails, it will display a static breathing guide.
-- If all else fails, it will provide simple, text-based instructions.
+- `index.html` - Readable development version (~4.9KB) - **Tracked in Git**
+- `index.min.html` - Minified production version (~278 bytes) - **Generated, not tracked**
+- `build.js` - Simple build script - **Tracked in Git**
+- `package.json` - Project configuration - **Tracked in Git**
+- `.gitignore` - Excludes build artifacts - **Tracked in Git**
 
----
+## Features
 
-**Just breathe. Find your calm.**
+- Smooth breathing animation with expanding/contracting circles
+- Responsive design for all devices
+- Mobile-optimized with fullscreen support
+- Pure HTML/CSS/JavaScript - no dependencies
+- Optimized for performance with `requestAnimationFrame`
 
-*A simple, focused tool, accessible to everyone.*
+## License
+
+MIT

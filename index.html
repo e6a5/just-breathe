@@ -1,1 +1,230 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Just Breathe</title><meta name="description" content="Simple breathing companion app"><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='35' fill='blue'/></svg>"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;color:white}h1{font-size:2.5rem;font-weight:300;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,.3)}p{font-size:1.1rem;opacity:.9;margin-bottom:2rem;font-weight:300}#c{display:block;margin:2rem auto;width:600px;height:600px;max-width:100%;border-radius:50%;overflow:hidden}@media(max-width:768px){h1{font-size:2rem}#c{width:500px;height:500px}}@media(max-width:480px){h1{font-size:1.5rem}#c{width:400px;height:400px}}</style></head><body><h1>Just Breathe</h1><p>Find your calm through simple breathing</p><canvas id="c" width="600" height="600"></canvas><script>class B{constructor(){this.c=document.getElementById('c');this.ctx=this.c.getContext('2d');this.w=this.c.width;this.h=this.c.height;this.cx=this.w/2;this.cy=this.h/2;this.d=8e3;this.s=performance.now();this.r=60;this.ctx.imageSmoothingEnabled=false;this.c.style.willChange='transform';this.a=this.a.bind(this);this.a()}a(){const p=(performance.now()-this.s)%this.d/this.d;this.r=this.b(p);this.dr();requestAnimationFrame(this.a)}b(t){const b=80,a=120;return t<.25?Math.round(b+a*t*4):t<.5?b+a:t<.75?Math.round(b+a-a*(t-.5)*4):b}dr(){this.ctx.clearRect(0,0,this.w,this.h);const cx=Math.round(this.cx),cy=Math.round(this.cy),r=Math.round(this.r);this.ctx.save();this.ctx.globalAlpha=.1;this.ctx.beginPath();this.ctx.arc(cx,cy,r*1.8,0,2*Math.PI);this.ctx.fillStyle='rgba(255,255,255,1)';this.ctx.fill();this.ctx.globalAlpha=.2;this.ctx.beginPath();this.ctx.arc(cx,cy,r*1.4,0,2*Math.PI);this.ctx.fillStyle='rgba(255,255,255,1)';this.ctx.fill();this.ctx.globalAlpha=.4;this.ctx.beginPath();this.ctx.arc(cx,cy,r,0,2*Math.PI);this.ctx.fillStyle='rgba(255,255,255,1)';this.ctx.fill();this.ctx.globalAlpha=.7;this.ctx.beginPath();this.ctx.arc(cx,cy,r*.6,0,2*Math.PI);this.ctx.fillStyle='rgba(255,255,255,1)';this.ctx.fill();this.ctx.restore()}}new B</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#667eea">
+  <title>Just Breathe</title>
+  <meta name="description" content="Simple breathing companion app">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='35' fill='blue'/></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      min-height: 100dvh; /* Dynamic viewport height for mobile */
+      min-height: calc(var(--vh, 1vh) * 100); /* Fallback for older browsers */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: white;
+      /* Mobile safe areas */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      margin: 0;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,.3);
+    }
+    
+    p {
+      font-size: 1.1rem;
+      opacity: .9;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+    
+    #breathing-circle {
+      display: block;
+      margin: 2rem auto;
+      width: 600px;
+      height: 600px;
+      max-width: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      #breathing-circle { width: 500px; height: 500px; }
+    }
+    
+    @media (max-width: 480px) {
+      h1 { font-size: 1.5rem; }
+      #breathing-circle { width: 400px; height: 400px; }
+    }
+    
+    /* Mobile-specific optimizations */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(env(safe-area-inset-left), 0px);
+        padding-right: max(env(safe-area-inset-right), 0px);
+        padding-top: max(env(safe-area-inset-top), 0px);
+        padding-bottom: max(env(safe-area-inset-bottom), 0px);
+      }
+    }
+    
+    /* iOS Safari specific */
+    @supports (-webkit-touch-callout: none) {
+      body {
+        min-height: -webkit-fill-available;
+      }
+    }
+    
+    /* Android Chrome specific */
+    @media screen and (display-mode: standalone) {
+      body {
+        min-height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Just Breathe</h1>
+  <p>Find your calm through simple breathing</p>
+  <canvas id="breathing-circle" width="600" height="600"></canvas>
+  
+  <script>
+    class BreathingApp {
+      constructor() {
+        // Get canvas and context
+        this.canvas = document.getElementById('breathing-circle');
+        this.ctx = this.canvas.getContext('2d');
+        
+        // Canvas dimensions
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
+        this.centerX = this.width / 2;
+        this.centerY = this.height / 2;
+        
+        // Animation settings
+        this.duration = 8000; // 8 seconds per breath cycle
+        this.startTime = performance.now();
+        this.radius = 60;
+        
+        // Performance optimizations
+        this.ctx.imageSmoothingEnabled = false;
+        this.canvas.style.willChange = 'transform';
+        
+        // Bind methods and start animation
+        this.animate = this.animate.bind(this);
+        this.animate();
+      }
+      
+      // Main animation loop
+      animate() {
+        const progress = (performance.now() - this.startTime) % this.duration / this.duration;
+        this.radius = this.calculateRadius(progress);
+        this.drawBreathingCircle();
+        requestAnimationFrame(this.animate);
+      }
+      
+      // Calculate radius based on breathing cycle
+      calculateRadius(time) {
+        const minRadius = 80;
+        const maxRadius = 120;
+        
+        if (time < 0.25) {
+          // Inhale: expand
+          return Math.round(minRadius + maxRadius * time * 4);
+        } else if (time < 0.5) {
+          // Hold: full size
+          return minRadius + maxRadius;
+        } else if (time < 0.75) {
+          // Exhale: contract
+          return Math.round(minRadius + maxRadius - maxRadius * (time - 0.5) * 4);
+        } else {
+          // Hold: small size
+          return minRadius;
+        }
+      }
+      
+      // Draw the breathing circle with multiple layers
+      drawBreathingCircle() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        const centerX = Math.round(this.centerX);
+        const centerY = Math.round(this.centerY);
+        const radius = Math.round(this.radius);
+        
+        this.ctx.save();
+        
+        // Outer ring (most transparent)
+        this.ctx.globalAlpha = 0.1;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, radius * 1.8, 0, 2 * Math.PI);
+        this.ctx.fillStyle = 'rgba(255,255,255,1)';
+        this.ctx.fill();
+        
+        // Second ring
+        this.ctx.globalAlpha = 0.2;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, radius * 1.4, 0, 2 * Math.PI);
+        this.ctx.fillStyle = 'rgba(255,255,255,1)';
+        this.ctx.fill();
+        
+        // Third ring
+        this.ctx.globalAlpha = 0.4;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        this.ctx.fillStyle = 'rgba(255,255,255,1)';
+        this.ctx.fill();
+        
+        // Inner ring (most opaque)
+        this.ctx.globalAlpha = 0.7;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
+        this.ctx.fillStyle = 'rgba(255,255,255,1)';
+        this.ctx.fill();
+        
+        this.ctx.restore();
+      }
+    }
+    
+    // Initialize the app
+    new BreathingApp();
+    
+    // Mobile fullscreen and orientation handling
+    function handleMobileFullscreen() {
+      // Request fullscreen on mobile
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen().catch(() => {});
+      }
+      
+      // Handle orientation changes
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('portrait').catch(() => {});
+      }
+    }
+    
+    // Add touch event to enter fullscreen
+    document.addEventListener('touchstart', handleMobileFullscreen, { once: true });
+    
+    // Handle viewport height changes (mobile browser UI)
+    function updateViewportHeight() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    window.addEventListener('resize', updateViewportHeight);
+    window.addEventListener('orientationchange', updateViewportHeight);
+    updateViewportHeight();
+  </script>
+</body>
+</html>
