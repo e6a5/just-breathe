@@ -61,11 +61,49 @@
       h1 { font-size: 1.5rem; }
       #breathing-circle { width: 400px; height: 400px; }
     }
+    
+    /* Pattern Selector Styling */
+    .pattern-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      margin: 0 0.25rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .pattern-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .pattern-btn.active {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
   </style>
 </head>
 <body>
   <h1>Just Breathe</h1>
   <p>Find your calm through simple breathing</p>
+  
+  <!-- Breathing Pattern Selector -->
+  <div id="pattern-selector" style="margin: 1rem 0; text-align: center;">
+    <button class="pattern-btn active" data-pattern="simple">Simple</button>
+    <button class="pattern-btn" data-pattern="box">Box</button>
+    <button class="pattern-btn" data-pattern="triangle">Triangle</button>
+    <button class="pattern-btn" data-pattern="478">4-7-8</button>
+  </div>
+  
+  <!-- Pattern Description -->
+  <div id="pattern-description" style="margin: 0.5rem 0; text-align: center; opacity: 0.8; font-size: 0.9rem;">
+    <span id="description-text">Simple inhale and exhale for general relaxation</span>
+  </div>
+  
   <canvas id="breathing-circle" width="600" height="600"></canvas>
   
   <!-- Fallback if canvas fails -->
@@ -95,8 +133,33 @@
         this.centerX = this.width / 2;
         this.centerY = this.height / 2;
         
+        // Breathing pattern settings
+        this.currentPattern = 'simple';
+        this.patterns = {
+          simple: { 
+            duration: 8000, 
+            phases: [0.25, 0.5, 0.75, 1.0],
+            description: 'Simple inhale and exhale for general relaxation'
+          },
+          box: { 
+            duration: 16000, 
+            phases: [0.25, 0.5, 0.75, 1.0],
+            description: 'Equal 4-second phases for focus and concentration'
+          },
+          triangle: { 
+            duration: 12000, 
+            phases: [0.33, 0.66, 1.0],
+            description: 'Quick 3-phase pattern for energy and alertness'
+          },
+          '478': { 
+            duration: 19000, 
+            phases: [0.21, 0.58, 0.79, 1.0],
+            description: '4-7-8 technique for quick calm and sleep preparation'
+          }
+        };
+        
         // Animation settings
-        this.duration = 8000; // 8 seconds per breath cycle
+        this.duration = this.patterns[this.currentPattern].duration;
         this.startTime = performance.now();
         this.radius = 60;
         
@@ -106,6 +169,7 @@
         
         // Bind methods and start animation
         this.animate = this.animate.bind(this);
+        this.setupPatternSelector();
         this.animate();
       }
       
@@ -113,6 +177,33 @@
       showFallback() {
         this.canvas.style.display = 'none';
         document.getElementById('fallback').style.display = 'block';
+      }
+      
+      // Setup pattern selector event listeners
+      setupPatternSelector() {
+        const buttons = document.querySelectorAll('.pattern-btn');
+        buttons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            this.switchPattern(btn.dataset.pattern);
+            
+            // Update active button
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+        });
+      }
+      
+      // Switch breathing pattern
+      switchPattern(pattern) {
+        this.currentPattern = pattern;
+        this.duration = this.patterns[pattern].duration;
+        this.startTime = performance.now(); // Reset timing
+        
+        // Update pattern description
+        const descriptionText = document.getElementById('description-text');
+        if (descriptionText) {
+          descriptionText.textContent = this.patterns[pattern].description;
+        }
       }
       
       // Main animation loop
@@ -123,24 +214,68 @@
         requestAnimationFrame(this.animate);
       }
       
-      // Calculate radius based on breathing cycle
+      // Calculate radius based on breathing cycle and pattern
       calculateRadius(time) {
         const minRadius = 80;
         const maxRadius = 120;
+        const pattern = this.patterns[this.currentPattern];
         
-        if (time < 0.25) {
-          // Inhale: expand
-          return Math.round(minRadius + maxRadius * time * 4);
-        } else if (time < 0.5) {
-          // Hold: full size
-          return minRadius + maxRadius;
-        } else if (time < 0.75) {
-          // Exhale: contract
-          return Math.round(minRadius + maxRadius - maxRadius * (time - 0.5) * 4);
-        } else {
-          // Hold: small size
-          return minRadius;
+        if (this.currentPattern === 'simple' || this.currentPattern === 'box') {
+          // 4-phase patterns: inhale, hold, exhale, hold
+          if (time < pattern.phases[0]) {
+            // Inhale: expand with smooth easing
+            const progress = this.easeInOut(time / pattern.phases[0]);
+            return Math.round(minRadius + maxRadius * progress);
+          } else if (time < pattern.phases[1]) {
+            // Hold: full size with gentle pulse
+            return minRadius + maxRadius;
+          } else if (time < pattern.phases[2]) {
+            // Exhale: contract with smooth easing
+            const progress = this.easeInOut((time - pattern.phases[1]) / (pattern.phases[2] - pattern.phases[1]));
+            return Math.round(minRadius + maxRadius - maxRadius * progress);
+          } else {
+            // Hold: small size
+            return minRadius;
+          }
+        } else if (this.currentPattern === 'triangle') {
+          // 3-phase pattern: inhale, hold, exhale
+          if (time < pattern.phases[0]) {
+            // Inhale: expand
+            const progress = this.easeInOut(time / pattern.phases[0]);
+            return Math.round(minRadius + maxRadius * progress);
+          } else if (time < pattern.phases[1]) {
+            // Hold: full size
+            return minRadius + maxRadius;
+          } else {
+            // Exhale: contract
+            const progress = this.easeInOut((time - pattern.phases[1]) / (pattern.phases[2] - pattern.phases[1]));
+            return Math.round(minRadius + maxRadius - maxRadius * progress);
+          }
+        } else if (this.currentPattern === '478') {
+          // 4-7-8 pattern: inhale 4s, hold 7s, exhale 8s
+          if (time < pattern.phases[0]) {
+            // Inhale: expand over 4 seconds
+            const progress = this.easeInOut(time / pattern.phases[0]);
+            return Math.round(minRadius + maxRadius * progress);
+          } else if (time < pattern.phases[1]) {
+            // Hold: full size for 7 seconds
+            return minRadius + maxRadius;
+          } else if (time < pattern.phases[2]) {
+            // Exhale: contract over 8 seconds
+            const progress = this.easeInOut((time - pattern.phases[1]) / (pattern.phases[2] - pattern.phases[1]));
+            return Math.round(minRadius + maxRadius - maxRadius * progress);
+          } else {
+            // Hold: small size
+            return minRadius;
+          }
         }
+        
+        return minRadius; // Fallback
+      }
+      
+      // Smooth easing function for natural breathing motion
+      easeInOut(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
       }
       
       // Draw the breathing circle with multiple layers
@@ -153,35 +288,177 @@
         
         this.ctx.save();
         
-        // Outer ring (most transparent)
-        this.ctx.globalAlpha = 0.1;
+        // Calculate breathing phase for enhanced visualization
+        const phase = this.getBreathingPhase();
+        const pulseIntensity = this.getPulseIntensity();
+        
+        // Outer ring with breathing wave effect
+        this.ctx.globalAlpha = 0.1 + pulseIntensity * 0.05;
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, radius * 1.8, 0, 2 * Math.PI);
         this.ctx.fillStyle = 'rgba(255,255,255,1)';
         this.ctx.fill();
         
-        // Second ring
-        this.ctx.globalAlpha = 0.2;
+        // Second ring with enhanced visibility
+        this.ctx.globalAlpha = 0.2 + pulseIntensity * 0.1;
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, radius * 1.4, 0, 2 * Math.PI);
         this.ctx.fillStyle = 'rgba(255,255,255,1)';
         this.ctx.fill();
         
-        // Third ring
-        this.ctx.globalAlpha = 0.4;
+        // Third ring (main breathing indicator)
+        this.ctx.globalAlpha = 0.4 + pulseIntensity * 0.15;
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         this.ctx.fillStyle = 'rgba(255,255,255,1)';
         this.ctx.fill();
         
-        // Inner ring (most opaque)
-        this.ctx.globalAlpha = 0.7;
+        // Inner ring with phase-specific enhancement
+        this.ctx.globalAlpha = 0.7 + pulseIntensity * 0.2;
         this.ctx.beginPath();
         this.ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
         this.ctx.fillStyle = 'rgba(255,255,255,1)';
         this.ctx.fill();
         
+        // Add breathing phase indicator
+        this.drawPhaseIndicator(centerX, centerY, radius, phase);
+        
         this.ctx.restore();
+      }
+      
+      // Get current breathing phase for enhanced visualization
+      getBreathingPhase() {
+        const time = (performance.now() - this.startTime) % this.duration / this.duration;
+        const pattern = this.patterns[this.currentPattern];
+        
+        if (this.currentPattern === 'simple' || this.currentPattern === 'box') {
+          // 4-phase patterns
+          if (time < pattern.phases[0]) return 'inhale';
+          if (time < pattern.phases[1]) return 'hold1';
+          if (time < pattern.phases[2]) return 'exhale';
+          return 'hold2';
+        } else if (this.currentPattern === 'triangle') {
+          // 3-phase pattern
+          if (time < pattern.phases[0]) return 'inhale';
+          if (time < pattern.phases[1]) return 'hold';
+          return 'exhale';
+        } else if (this.currentPattern === '478') {
+          // 4-7-8 pattern
+          if (time < pattern.phases[0]) return 'inhale';
+          if (time < pattern.phases[1]) return 'hold';
+          if (time < pattern.phases[2]) return 'exhale';
+          return 'hold2';
+        }
+        
+        return 'inhale'; // Fallback
+      }
+      
+      // Calculate pulse intensity for hold phases
+      getPulseIntensity() {
+        const time = (performance.now() - this.startTime) % this.duration / this.duration;
+        const pattern = this.patterns[this.currentPattern];
+        
+        if (this.currentPattern === 'simple' || this.currentPattern === 'box') {
+          // 4-phase patterns
+          if (time >= pattern.phases[0] && time < pattern.phases[1]) {
+            // First hold phase - gentle pulse
+            const holdTime = (time - pattern.phases[0]) / (pattern.phases[1] - pattern.phases[0]);
+            return Math.sin(holdTime * 8 * Math.PI) * 0.5 + 0.5;
+          } else if (time >= pattern.phases[2]) {
+            // Second hold phase - subtle pulse
+            const holdTime = (time - pattern.phases[2]) / (1 - pattern.phases[2]);
+            return Math.sin(holdTime * 4 * Math.PI) * 0.3 + 0.5;
+          }
+        } else if (this.currentPattern === 'triangle') {
+          // 3-phase pattern
+          if (time >= pattern.phases[0] && time < pattern.phases[1]) {
+            // Hold phase - gentle pulse
+            const holdTime = (time - pattern.phases[0]) / (pattern.phases[1] - pattern.phases[0]);
+            return Math.sin(holdTime * 6 * Math.PI) * 0.4 + 0.5;
+          }
+        } else if (this.currentPattern === '478') {
+          // 4-7-8 pattern
+          if (time >= pattern.phases[0] && time < pattern.phases[1]) {
+            // Hold phase - gentle pulse
+            const holdTime = (time - pattern.phases[0]) / (pattern.phases[1] - pattern.phases[0]);
+            return Math.sin(holdTime * 4 * Math.PI) * 0.3 + 0.5;
+          } else if (time >= pattern.phases[2]) {
+            // Second hold phase - subtle pulse
+            const holdTime = (time - pattern.phases[2]) / (1 - pattern.phases[2]);
+            return Math.sin(holdTime * 3 * Math.PI) * 0.2 + 0.5;
+          }
+        }
+        
+        return 0.5; // No pulse during inhale/exhale
+      }
+      
+      // Draw breathing phase indicator
+      drawPhaseIndicator(centerX, centerY, radius, phase) {
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.8;
+        
+        // Draw subtle directional arrows based on phase
+        if (phase === 'inhale') {
+          this.drawInhaleArrows(centerX, centerY, radius);
+        } else if (phase === 'exhale') {
+          this.drawExhaleArrows(centerX, centerY, radius);
+        }
+        
+        this.ctx.restore();
+      }
+      
+      // Draw inhale arrows (expanding outward)
+      drawInhaleArrows(centerX, centerY, radius) {
+        const arrowLength = 15;
+        const arrowCount = 8;
+        
+        for (let i = 0; i < arrowCount; i++) {
+          const angle = (i / arrowCount) * 2 * Math.PI;
+          const x1 = centerX + Math.cos(angle) * (radius + 30);
+          const y1 = centerY + Math.sin(angle) * (radius + 30);
+          const x2 = centerX + Math.cos(angle) * (radius + 30 + arrowLength);
+          const y2 = centerY + Math.sin(angle) * (radius + 30 + arrowLength);
+          
+          this.drawArrow(x1, y1, x2, y2);
+        }
+      }
+      
+      // Draw exhale arrows (contracting inward)
+      drawExhaleArrows(centerX, centerY, radius) {
+        const arrowLength = 15;
+        const arrowCount = 8;
+        
+        for (let i = 0; i < arrowCount; i++) {
+          const angle = (i / arrowCount) * 2 * Math.PI;
+          const x1 = centerX + Math.cos(angle) * (radius + 30);
+          const y1 = centerY + Math.sin(angle) * (radius + 30);
+          const x2 = centerX + Math.cos(angle) * (radius + 30 - arrowLength);
+          const y2 = centerY + Math.sin(angle) * (radius + 30 - arrowLength);
+          
+          this.drawArrow(x1, y1, x2, y2);
+        }
+      }
+      
+      // Draw individual arrow
+      drawArrow(x1, y1, x2, y2) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x1, y1);
+        this.ctx.lineTo(x2, y2);
+        this.ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+        
+        // Arrow head
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const headLength = 8;
+        const headAngle = Math.PI / 6;
+        
+        this.ctx.beginPath();
+        this.ctx.moveTo(x2, y2);
+        this.ctx.lineTo(x2 - headLength * Math.cos(angle - headAngle), y2 - headLength * Math.sin(angle - headAngle));
+        this.ctx.moveTo(x2, y2);
+        this.ctx.lineTo(x2 - headLength * Math.cos(angle + headAngle), y2 - headLength * Math.sin(angle + headAngle));
+        this.ctx.stroke();
       }
     }
     
