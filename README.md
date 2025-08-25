@@ -12,33 +12,24 @@ Following Unix philosophy:
 
 ## Development Workflow
 
-### Development (Readable Code)
-- Work with `index.html` - clean, maintainable, well-commented
+### Simple & Direct
+- Work directly with `index.html` - clean, maintainable, well-commented
+- No build steps, no complexity
 - Easy to debug, modify, and extend
 - Perfect for development and collaboration
-
-### Production (2KB Constraint)
-- Run `npm run build` to create `index.min.html`
-- Automatically minified to meet 2KB size requirement
-- Maintains exact same functionality
 
 ## Quick Start
 
 ```bash
 # Development
-npm run dev          # Open readable version in browser
-
-# Production build
-npm run build        # Create minified 2KB version
+npm run dev          # Open app in browser
 ```
 
 ## File Structure
 
-- `index.html` - Readable development version (~4.9KB) - **Tracked in Git**
-- `index.min.html` - Minified production version (~278 bytes) - **Generated, not tracked**
-- `build.js` - Simple build script - **Tracked in Git**
+- `index.html` - Simple, readable breathing app (~5.7KB) - **Tracked in Git**
 - `package.json` - Project configuration - **Tracked in Git**
-- `.gitignore` - Excludes build artifacts - **Tracked in Git**
+- `.gitignore` - Excludes unnecessary files - **Tracked in Git**
 
 ## Features
 

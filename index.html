@@ -2,11 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#667eea">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Just Breathe</title>
   <meta name="description" content="Simple breathing companion app">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='35' fill='blue'/></svg>">
@@ -21,17 +17,15 @@
       font-family: -apple-system, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      min-height: 100dvh; /* Dynamic viewport height for mobile */
-      min-height: calc(var(--vh, 1vh) * 100); /* Fallback for older browsers */
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       overflow: hidden;
       color: white;
-      /* Mobile safe areas */
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
       margin: 0;
+      padding: 1rem;
+      box-sizing: border-box;
     }
     
     h1 {
@@ -67,30 +61,6 @@
       h1 { font-size: 1.5rem; }
       #breathing-circle { width: 400px; height: 400px; }
     }
-    
-    /* Mobile-specific optimizations */
-    @supports (padding: max(0px)) {
-      body {
-        padding-left: max(env(safe-area-inset-left), 0px);
-        padding-right: max(env(safe-area-inset-right), 0px);
-        padding-top: max(env(safe-area-inset-top), 0px);
-        padding-bottom: max(env(safe-area-inset-bottom), 0px);
-      }
-    }
-    
-    /* iOS Safari specific */
-    @supports (-webkit-touch-callout: none) {
-      body {
-        min-height: -webkit-fill-available;
-      }
-    }
-    
-    /* Android Chrome specific */
-    @media screen and (display-mode: standalone) {
-      body {
-        min-height: 100vh;
-      }
-    }
   </style>
 </head>
 <body>
@@ -98,12 +68,26 @@
   <p>Find your calm through simple breathing</p>
   <canvas id="breathing-circle" width="600" height="600"></canvas>
   
+  <!-- Fallback if canvas fails -->
+  <div id="fallback" style="display: none; text-align: center;">
+    <div style="width: 200px; height: 200px; border: 3px solid white; border-radius: 50%; margin: 2rem auto; display: flex; align-items: center; justify-content: center;">
+      <span style="font-size: 1.2rem; opacity: 0.8;">Breathe</span>
+    </div>
+    <p style="font-size: 1.1rem; opacity: 0.9;">Follow the rhythm: Inhale... Hold... Exhale...</p>
+  </div>
+  
   <script>
     class BreathingApp {
       constructor() {
         // Get canvas and context
         this.canvas = document.getElementById('breathing-circle');
         this.ctx = this.canvas.getContext('2d');
+        
+        // Check if canvas is supported
+        if (!this.ctx) {
+          this.showFallback();
+          return;
+        }
         
         // Canvas dimensions
         this.width = this.canvas.width;
@@ -123,6 +107,12 @@
         // Bind methods and start animation
         this.animate = this.animate.bind(this);
         this.animate();
+      }
+      
+      // Show fallback if canvas fails
+      showFallback() {
+        this.canvas.style.display = 'none';
+        document.getElementById('fallback').style.display = 'block';
       }
       
       // Main animation loop
@@ -197,34 +187,6 @@
     
     // Initialize the app
     new BreathingApp();
-    
-    // Mobile fullscreen and orientation handling
-    function handleMobileFullscreen() {
-      // Request fullscreen on mobile
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen().catch(() => {});
-      }
-      
-      // Handle orientation changes
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('portrait').catch(() => {});
-      }
-    }
-    
-    // Add touch event to enter fullscreen
-    document.addEventListener('touchstart', handleMobileFullscreen, { once: true });
-    
-    // Handle viewport height changes (mobile browser UI)
-    function updateViewportHeight() {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    
-    window.addEventListener('resize', updateViewportHeight);
-    window.addEventListener('orientationchange', updateViewportHeight);
-    updateViewportHeight();
   </script>
 </body>
 </html>

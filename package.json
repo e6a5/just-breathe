@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "Simple breathing companion app",
   "scripts": {
-    "build": "node build.js",
-    "dev": "open index.html",
-    "deploy": "npm run build && echo 'Ready to deploy! Upload index.min.html to Netlify'"
-  },
-  "devDependencies": {
-    "terser": "^5.24.0"
+    "dev": "open index.html"
   }
 }
