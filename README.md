@@ -1,49 +1,39 @@
 # Just Breathe
 
-**Find your calm through simple breathing.**
+Find your center through the simple rhythm of your own breath.
 
-A gentle companion that guides you through natural breathing with a flowing animation. No instructions, no complexity - just breathe.
+This is a gentle companion designed to guide you through a natural breathing sequence with a simple, flowing animation. There are no instructions to read and no complex settings to configure. Just open the page and breathe.
 
-## ✨ Simple & Focused
+## Core Principles
 
-- **One purpose**: Pure breathing guidance
-- **Zero complexity**: No setup, no learning curve
-- **Universal**: Works on any device with a browser
-- **Graceful**: Always works, even when things go wrong
+- **Purity of Purpose**: To offer a space for guided breathing, and nothing more.
+- **Inherent Simplicity**: No setup, no learning curve, just immediate use.
+- **Universal Access**: Works on any device with a modern web browser.
+- **Designed for Serenity**: A tool that remains reliable and calm, even when things go wrong.
 
-## 🚀 Get Started in Seconds
+## Usage
 
-1. **Open** `src/index.html` in any browser
-2. **Breathe** with the gentle animation
-3. **That's it!**
+1. Open the `index.html` file in your browser.
+2. Follow the gentle rhythm of the animation.
+3. That is all.
 
-## 🌐 Run Locally
+## The Unix Philosophy in Practice
 
-```bash
-npm run serve
-# Open http://localhost:8080
-```
+- **"Do one thing, and do it well"**: This application is dedicated entirely to the practice of guided breathing.
+- **Simplicity**: It avoids build tools and compilation steps.
+- **Graceful Failure**: The application is designed to degrade gracefully, with multiple fallback levels.
+- **Respect for the User's Environment**: It is built with standard web technologies to ensure broad compatibility.
 
-## 📁 Deploy Anywhere
+## For Developers
 
-Upload the `src/` folder to any web server. No build step required.
+The application degrades gracefully in the following order:
 
-## 💡 Unix Philosophy
-
-- **"Do one thing, and do it well"** - Pure breathing exercise
-- **Simplicity** - No build tools, no compilation
-- **Fail gracefully** - Multiple fallback levels
-- **Respect user environment** - Standard web technologies
-
-## 🔧 For Developers
-
-The app gracefully degrades:
-- **Canvas fails** → Text-based breathing
-- **JavaScript fails** → Static breathing guide
-- **Everything fails** → Simple text instructions
+- If the canvas fails, it will fall back to a text-based breathing guide.
+- If JavaScript fails, it will display a static breathing guide.
+- If all else fails, it will provide simple, text-based instructions.
 
 ---
 
-**Just breathe, find your calm.**
+**Just breathe. Find your calm.**
 
-*Simple, focused, and accessible to everyone.*
+*A simple, focused tool, accessible to everyone.*
